@@ -7,8 +7,13 @@
 *.user
 *.suo
 
-# Local database files
+# Local database files and SQLite temporary files
 *.db
 *.db-*
 *.sqlite
+*.sqlite-*
 *.sqlite3
+*.sqlite3-*
+
+# Local database settings can contain credentials
+DatabaseSettings.Local.json

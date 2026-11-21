@@ -1,0 +1,4 @@
+{
+  "Provider": "Oracle",
+  "OracleConnectionString": "User Id=<user>;Password=<password>;Data Source=<host>:<port>/<service-name>"
+}

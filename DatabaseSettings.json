@@ -1,0 +1,4 @@
+{
+  "Provider": "SQLite",
+  "SqliteDatabasePath": "Data/ImHelper.db"
+}
