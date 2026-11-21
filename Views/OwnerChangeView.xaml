@@ -1,0 +1,201 @@
+<UserControl x:Class="ImHelper.Views.OwnerChangeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="PanelBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#D1D5DB" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="Background" Value="White" />
+        </Style>
+        <Style x:Key="ChangedCellStyle" TargetType="DataGridCell">
+            <Setter Property="Foreground" Value="#B54708" />
+        </Style>
+        <Style x:Key="DepartmentCellStyle" TargetType="DataGridCell">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DataContext.IsDepartmentChanged, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Value="True">
+                    <Setter Property="Foreground" Value="#B54708" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,14" LastChildFill="False">
+            <StackPanel DockPanel.Dock="Left">
+                <TextBlock Text="현업담당자 변경" FontSize="22" FontWeight="Bold" />
+                <TextBlock Margin="0,4,0,0" Foreground="#6B7280" Text="변경 전 담당자를 기준으로 소속 사용자를 조회하고 변경 내용을 미리 확인합니다." />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Margin="0,0,6,0" Foreground="#374151" Text="범례:" VerticalAlignment="Center" />
+                <TextBlock Margin="0,0,14,0" Foreground="#B54708" FontWeight="SemiBold" Text="변경됨" VerticalAlignment="Center" />
+                <TextBlock Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" Text="유지" VerticalAlignment="Center" />
+            </StackPanel>
+        </DockPanel>
+
+        <Grid Grid.Row="1" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource PanelBorderStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Margin="0,0,0,10" Text="변경 전 현업담당자" FontSize="16" FontWeight="SemiBold" />
+                    <Grid Grid.Row="1" Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Margin="0,0,6,0" Padding="6" Width="100" ItemsSource="{Binding SearchOptions}" DisplayMemberPath="DisplayName" SelectedValuePath="Field" SelectedValue="{Binding OldContactSearchField, Mode=TwoWay}" />
+                        <TextBox Grid.Column="1" Margin="0,0,6,0" Padding="6" ToolTip="검색어" Text="{Binding OldContactSearchText, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Grid.Column="2" Padding="12,5" Content="조회" Command="{Binding SearchOldContactsCommand}" />
+                    </Grid>
+                    <ListBox Grid.Row="2" MinHeight="110" ItemsSource="{Binding OldContactResults}" SelectedItem="{Binding SelectedOldContact, Mode=TwoWay}" SelectionMode="Single">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.2*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1.4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="ID" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding Id}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="사번" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding EmployeeNumber}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="사용자명" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding UserName}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="3">
+                                        <TextBlock Text="부서" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding Department}" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Border Grid.Row="3" Margin="0,8,0,0" Padding="8" Background="#F9FAFB" CornerRadius="4">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Text="선택된 사용자: " FontWeight="SemiBold" />
+                            <Run Text="{Binding SelectedOldContact.Id, TargetNullValue=미선택}" />
+                            <Run Text="  /  " />
+                            <Run Text="{Binding SelectedOldContact.EmployeeNumber}" />
+                            <Run Text="  /  " />
+                            <Run Text="{Binding SelectedOldContact.UserName}" />
+                            <Run Text="  /  " />
+                            <Run Text="{Binding SelectedOldContact.Department}" />
+                        </TextBlock>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource PanelBorderStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Margin="0,0,0,10" Text="변경 후 현업담당자" FontSize="16" FontWeight="SemiBold" />
+                    <Grid Grid.Row="1" Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Margin="0,0,6,0" Padding="6" Width="100" ItemsSource="{Binding SearchOptions}" DisplayMemberPath="DisplayName" SelectedValuePath="Field" SelectedValue="{Binding NewContactSearchField, Mode=TwoWay}" />
+                        <TextBox Grid.Column="1" Margin="0,0,6,0" Padding="6" ToolTip="검색어" Text="{Binding NewContactSearchText, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Grid.Column="2" Padding="12,5" Content="조회" Command="{Binding SearchNewContactsCommand}" />
+                    </Grid>
+                    <ListBox Grid.Row="2" MinHeight="110" ItemsSource="{Binding NewContactResults}" SelectedItem="{Binding SelectedNewContact, Mode=TwoWay}" SelectionMode="Single">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.2*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1.4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="ID" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding Id}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="사번" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding EmployeeNumber}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="사용자명" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding UserName}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="3">
+                                        <TextBlock Text="부서" Foreground="#6B7280" FontSize="10" />
+                                        <TextBlock Text="{Binding Department}" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Border Grid.Row="3" Margin="0,8,0,0" Padding="8" Background="#F9FAFB" CornerRadius="4">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run Text="선택된 사용자: " FontWeight="SemiBold" />
+                            <Run Text="{Binding SelectedNewContact.Id, TargetNullValue=미선택}" />
+                            <Run Text="  /  " />
+                            <Run Text="{Binding SelectedNewContact.EmployeeNumber}" />
+                            <Run Text="  /  " />
+                            <Run Text="{Binding SelectedNewContact.UserName}" />
+                            <Run Text="  /  " />
+                            <Run Text="{Binding SelectedNewContact.Department}" />
+                        </TextBlock>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" Style="{StaticResource PanelBorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock DockPanel.Dock="Left" Text="변경 대상 사용자" FontSize="16" FontWeight="SemiBold" />
+                    <TextBlock DockPanel.Dock="Right" Foreground="#6B7280" Text="A에게 소속된 사용자 전체" />
+                </DockPanel>
+                <DataGrid Grid.Row="1" ItemsSource="{Binding TargetUsers}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal" SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="사용자 ID" Binding="{Binding UserId}" Width="*" />
+                        <DataGridTextColumn Header="사번" Binding="{Binding EmployeeNumber}" Width="*" />
+                        <DataGridTextColumn Header="사용자명" Binding="{Binding UserName}" Width="*" />
+                        <DataGridTextColumn Header="현업담당자 ID" Binding="{Binding ContactId}" Width="1.3*" CellStyle="{StaticResource ChangedCellStyle}" />
+                        <DataGridTextColumn Header="현업담당자 부서" Binding="{Binding ContactDepartment}" Width="1.4*" CellStyle="{StaticResource DepartmentCellStyle}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

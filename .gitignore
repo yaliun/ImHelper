@@ -1,0 +1,14 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio user settings and caches
+.vs/
+*.user
+*.suo
+
+# Local database files
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
